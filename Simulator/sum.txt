@@ -1,0 +1,11 @@
+.org 32
+.data A 5
+.data B 11
+.data C
+.data D 34
+.data E 56
+L: LDA A
+ADC B
+ADC C
+ADC D
+ADC E
