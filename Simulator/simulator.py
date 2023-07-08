@@ -216,11 +216,13 @@ def display(displayContetnt , liName):
         ttk.Style().configure(combo, relief='raised')
         combo.place(x = 150 , y = 300)
         combo.bind("<<ComboboxSelected>>", onComboChange)
+        combo.current(2)
         combo.pack()
-
         txt_output = Text(newWindow, font=('Helvetica bold', 13) , height=17, width=40)
         txt_output.pack(pady=14)
 
+        onComboChange(None)
+        
     if displayContetnt :
         txt_output.delete("1.0", END)
 
