@@ -177,7 +177,7 @@ def onComboChange(event):
                         memToDisplay[cell] = bin(memToDisplay[cell])[2:]
                     else :
                         content = content.split()
-                        if (content[1] not in varAddresses.keys()) : memToDisplay[cell] = f'{content[0]} { bin(int(content[1],16))[2:] }'
+                        if (content[1] not in varAddresses.keys()) : memToDisplay[cell] = f'{content[0]} { "{:014b}".format(int(content[1],16))[2:] }'
                 
             
             if cell == lastKey : break
@@ -191,7 +191,7 @@ def onComboChange(event):
                 case 'Hex':          
                     varsToDiplay[var] = hex(memory[addr])[2:]
                 case 'Binary':
-                    varsToDiplay[var] = bin(memory[addr])[2:]
+                    varsToDiplay[var] = "{:018b}".format(memory[addr])[2:]
     
     display(True, listToDisplay)
 
@@ -204,7 +204,7 @@ def display(displayContetnt , liName):
     if not displayContetnt :
         listToDisplay = liName
         newWindow = Toplevel()    
-        newWindow.geometry("800x505+340+130")
+        newWindow.geometry("800x550+320+125")
         newWindow.title("Values")
         newWindow ['background'] = '#118da8'
 
@@ -219,33 +219,36 @@ def display(displayContetnt , liName):
         combo.current(2)
         combo.pack()
         txt_output = Text(newWindow, font=('Helvetica bold', 13) , height=17, width=40)
-        txt_output.pack(pady=14)
+        txt_output.pack(pady=30)
 
         onComboChange(None)
-        
+
     if displayContetnt :
         txt_output.delete("1.0", END)
 
         if listToDisplay == 'memory' :
             for addr , val in memToDisplay.items() :
                 if combo.get() == 'Binary' :
-                    txt_output.insert(END, f'\t        {bin(int(addr,16))[2:]}  :  {val}' + "\n")
+                    txt_output.insert(END, f'            {"{:014b}".format(int(addr,16))[2:]}  :  {val}' + "\n")
                 else :
                     txt_output.insert(END, f'\t            {addr}  :  {val}' + "\n")
         else :
-            for var , value in varsToDiplay.items() :             
-                txt_output.insert(END, f'\t                {var}  :  {value}' + "\n\n")
+            for var , value in varsToDiplay.items() :
+                if combo.get() == 'Binary' : 
+                    txt_output.insert(END, f'\t     {var}  :  {value}' + "\n\n")
+                else :
+                    txt_output.insert(END, f'\t                {var}  :  {value}' + "\n\n")
 
 
     
 win = Tk()
 win.title('Simulator Menu')
-win.geometry('800x505+340+130')
+win.geometry('800x550+320+125')
 win ['background'] = '#20bbc9'
 
-Label(text = 'Amounts of Registers', bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 413 , y = 58 , anchor = CENTER)
-Label(text = f'A = {A}', fg = 'white' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 410 , y = 138 , anchor = CENTER)
-Label(text = f'T = {T}' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 410 , y = 217 , anchor = CENTER)
-Button(text='Display Memory', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = lambda : display(False, 'memory') ).place(x = 183 , y = 277)
-Button(text='Display Variables', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = lambda : display(False, 'vars') ).place(x = 183 , y = 367)
+Label(text = 'Amounts of Registers', bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 403 , y = 58 , anchor = CENTER)
+Label(text = f'A = {A}', fg = 'white' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 400 , y = 148 , anchor = CENTER)
+Label(text = f'T = {T}' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 400 , y = 232 , anchor = CENTER)
+Button(text='Display Memory', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = lambda : display(False, 'memory') ).place(x = 178 , y = 300)
+Button(text='Display Variables', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = lambda : display(False, 'vars') ).place(x = 178 , y = 410)
 win.mainloop()
