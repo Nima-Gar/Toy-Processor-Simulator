@@ -186,6 +186,6 @@ disFormat = 'Int'
 Label(text = 'Amounts of Registers', bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 413 , y = 58 , anchor = CENTER)
 Label(text = f'A = {A}', fg = 'white' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 410 , y = 138 , anchor = CENTER)
 Label(text = f'T = {T}' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 410 , y = 217 , anchor = CENTER)
-Button(text='Display Memory', fg = 'white' , bg='#04B4AE', font=('Helvetica bold', 20), width = 27, height = 2  , command = displayMem).place(x = 183 , y = 277)
-Button(text='Display Variables', fg = 'white' , bg='#04B4AE', font=('Helvetica bold', 20), width = 27, height = 2  , command = displayMem).place(x = 183 , y = 367)
+Button(text='Display Memory', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = displayMem).place(x = 183 , y = 277)
+Button(text='Display Variables', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = displayMem).place(x = 183 , y = 367)
 win.mainloop()
