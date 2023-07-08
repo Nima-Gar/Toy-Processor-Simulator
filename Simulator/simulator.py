@@ -149,7 +149,7 @@ print(f'varAddresses: {varAddresses}')
 
 
 def onComboChange(event):
-    combo = event.widget.get()
+    disFormat = combo.get()
     
     global memToDisplay
     global varsToDiplay
@@ -160,7 +160,7 @@ def onComboChange(event):
 
         for cell , content in memToDisplay.items() :
 
-            match combo :
+            match disFormat :
                 case 'Int' :
                     intCellAddress = int(cell,16)
                     memToDisplay[intCellAddress] = memToDisplay[cell]
@@ -181,6 +181,17 @@ def onComboChange(event):
                 
             
             if cell == lastKey : break
+
+    else :
+        varsToDiplay = varAddresses.copy()
+        for var , addr in varsToDiplay.items() :
+            match disFormat :
+                case 'Int':
+                    varsToDiplay[var] = memory[addr]
+                case 'Hex':          
+                    varsToDiplay[var] = hex(memory[addr])[2:]
+                case 'Binary':
+                    varsToDiplay[var] = bin(memory[addr])[2:]
     
     display(True, listToDisplay)
 
@@ -193,11 +204,13 @@ def display(displayContetnt , liName):
     if not displayContetnt :
         listToDisplay = liName
         newWindow = Toplevel()    
-        newWindow.geometry("800x470+340+150")
+        newWindow.geometry("800x505+340+130")
         newWindow.title("Values")
         newWindow ['background'] = '#118da8'
 
-        Label(newWindow , text = 'Memory Cells' , fg = 'white' , bg = '#118da8' , pady = 30 , font=('Helvetica bold', 20)).pack()
+        if liName == 'memory' :  Label(newWindow , text = 'Memory Cells' , fg = 'white' , bg = '#118da8' , pady = 30 , font=('Helvetica bold', 20)).pack()
+        else :                   Label(newWindow , text = 'Variable Values' , fg = 'white' , bg = '#118da8' , pady = 30 , font=('Helvetica bold', 20)).pack()
+
         
         combo = ttk.Combobox(newWindow, state='readonly' , values=['Binary','Hex','Int'], font = ('Helvetica bold', 13) , width=43)
         ttk.Style().configure(combo, relief='raised')
@@ -210,18 +223,22 @@ def display(displayContetnt , liName):
 
     if displayContetnt :
         txt_output.delete("1.0", END)
+
         if listToDisplay == 'memory' :
             for addr , val in memToDisplay.items() :
                 if combo.get() == 'Binary' :
-                    txt_output.insert(END, f'\t            {bin(int(addr,16))[2:]}  :  {val}' + "\n")
+                    txt_output.insert(END, f'\t        {bin(int(addr,16))[2:]}  :  {val}' + "\n")
                 else :
                     txt_output.insert(END, f'\t            {addr}  :  {val}' + "\n")
+        else :
+            for var , value in varsToDiplay.items() :             
+                txt_output.insert(END, f'\t                {var}  :  {value}' + "\n\n")
 
 
     
 win = Tk()
 win.title('Simulator Menu')
-win.geometry('800x470+340+150')
+win.geometry('800x505+340+130')
 win ['background'] = '#20bbc9'
 
 Label(text = 'Amounts of Registers', bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 413 , y = 58 , anchor = CENTER)
