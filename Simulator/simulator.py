@@ -50,6 +50,7 @@ while True :
             lineAddress += 1
 file.close()
 
+
 pc = 1
 lastInsAddress = int(list(instrcutions)[-1] , 16)
 
@@ -150,23 +151,34 @@ print(f'varAddresses: {varAddresses}')
 def onComboChange(event):
     combo = event.widget.get()
     
-    global memToDiplay
+    global memToDisplay
     global varsToDiplay
+    memToDisplay = memory.copy()
 
     if listToDisplay == 'memory' :
-        memToDiplay = memory
-        lastKey = list(memToDiplay.keys())[-1]
+        lastKey = list(memToDisplay.keys())[-1]
 
-        for cell , content in memToDiplay.items() :
+        for cell , content in memToDisplay.items() :
 
             match combo :
                 case 'Int' :
-                    memToDiplay[int(cell,16)] = memToDiplay[cell]
-                    del memToDiplay[cell]
-                    if type(content) not in (int, float) :
+                    intCellAddress = int(cell,16)
+                    memToDisplay[intCellAddress] = memToDisplay[cell]
+                    del memToDisplay[cell]
+                    if type(content) != int :
                         content = content.split()
-                        if (content[1] not in varAddresses.keys()) : memToDiplay[int(cell,16)] = f'{content[0]} {int(content[1],16)}'
-                # case 'Binary'
+                        if (content[1] not in varAddresses.keys()) : memToDisplay[intCellAddress] = f'{content[0]} {int(content[1],16)}'
+                case 'Hex' :
+                    if type(content) == int :
+                        memToDisplay[cell] = hex(content)[2:]
+
+                case 'Binary' :
+                    if type(content) == int : 
+                        memToDisplay[cell] = bin(memToDisplay[cell])[2:]
+                    else :
+                        content = content.split()
+                        if (content[1] not in varAddresses.keys()) : memToDisplay[cell] = f'{content[0]} { bin(int(content[1],16))[2:] }'
+                
             
             if cell == lastKey : break
     
@@ -199,13 +211,14 @@ def display(displayContetnt , liName):
     if displayContetnt :
         txt_output.delete("1.0", END)
         if listToDisplay == 'memory' :
-            for addr , val in memToDiplay.items() :
-                txt_output.insert(END, f'\t            {addr}  :  {val}' + "\n")
+            for addr , val in memToDisplay.items() :
+                if combo.get() == 'Binary' :
+                    txt_output.insert(END, f'\t            {bin(int(addr,16))[2:]}  :  {val}' + "\n")
+                else :
+                    txt_output.insert(END, f'\t            {addr}  :  {val}' + "\n")
+
 
     
-
-   
-
 win = Tk()
 win.title('Simulator Menu')
 win.geometry('800x470+340+150')

@@ -1,4 +1,4 @@
-.org 30
+.org 32
 .data B 12
 .data C 20
 .data Z 0
