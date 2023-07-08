@@ -146,33 +146,63 @@ print(f'instrcutions: {instrcutions}')
 print(f'labels: {labels}')
 print(f'varAddresses: {varAddresses}')
 
+
 def onComboChange(event):
     combo = event.widget.get()
-    print(f'{combo}')
+    
+    global memToDiplay
+    global varsToDiplay
+
+    if listToDisplay == 'memory' :
+        memToDiplay = memory
+        lastKey = list(memToDiplay.keys())[-1]
+
+        for cell , content in memToDiplay.items() :
+
+            match combo :
+                case 'Int' :
+                    memToDiplay[int(cell,16)] = memToDiplay[cell]
+                    del memToDiplay[cell]
+                    if type(content) not in (int, float) :
+                        content = content.split()
+                        if (content[1] not in varAddresses.keys()) : memToDiplay[int(cell,16)] = f'{content[0]} {int(content[1],16)}'
+                # case 'Binary'
+            
+            if cell == lastKey : break
+    
+    display(True, listToDisplay)
 
 
-def displayMem():
-    newWindow = Toplevel()    
-    newWindow.geometry("800x470+340+150")
-    newWindow.title("Values")
-    newWindow ['background'] = '#118da8'
+def display(displayContetnt , liName):
+    global txt_output
+    global combo
+    global listToDisplay
 
-    Label(newWindow , text = 'Memory Cells' , fg = 'white' , bg = '#118da8' , pady = 30 , font=('Helvetica bold', 20)).pack()
+    if not displayContetnt :
+        listToDisplay = liName
+        newWindow = Toplevel()    
+        newWindow.geometry("800x470+340+150")
+        newWindow.title("Values")
+        newWindow ['background'] = '#118da8'
+
+        Label(newWindow , text = 'Memory Cells' , fg = 'white' , bg = '#118da8' , pady = 30 , font=('Helvetica bold', 20)).pack()
+        
+        combo = ttk.Combobox(newWindow, state='readonly' , values=['Binary','Hex','Int'], font = ('Helvetica bold', 13) , width=43)
+        ttk.Style().configure(combo, relief='raised')
+        combo.place(x = 150 , y = 300)
+        combo.bind("<<ComboboxSelected>>", onComboChange)
+        combo.pack()
+
+        txt_output = Text(newWindow, font=('Helvetica bold', 13) , height=17, width=40)
+        txt_output.pack(pady=14)
+
+    if displayContetnt :
+        txt_output.delete("1.0", END)
+        if listToDisplay == 'memory' :
+            for addr , val in memToDiplay.items() :
+                txt_output.insert(END, f'\t            {addr}  :  {val}' + "\n")
 
     
-    global combo
-    combo = ttk.Combobox(newWindow, state='readonly' , values=['Binary','Hex','Int'], font = ('Helvetica bold', 13) , width=43)
-    ttk.Style().configure(combo, relief='raised')
-    combo.place(x = 150 , y = 300)
-    combo.current(2)
-    combo.bind("<<ComboboxSelected>>", onComboChange)
-    combo.pack()
-
-    txt_output = Text(newWindow, font=('Helvetica bold', 13) , height=17, width=40)
-    txt_output.pack(pady=14)
-
-    for addr , val in memory.items() :
-        txt_output.insert(END, f'\t            {"{:03x}".format(int(addr,16))}  :  {val}' + "\n")
 
    
 
@@ -181,11 +211,9 @@ win.title('Simulator Menu')
 win.geometry('800x470+340+150')
 win ['background'] = '#20bbc9'
 
-disFormat = 'Int'
-
 Label(text = 'Amounts of Registers', bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 413 , y = 58 , anchor = CENTER)
 Label(text = f'A = {A}', fg = 'white' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 410 , y = 138 , anchor = CENTER)
 Label(text = f'T = {T}' , bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 410 , y = 217 , anchor = CENTER)
-Button(text='Display Memory', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = displayMem).place(x = 183 , y = 277)
-Button(text='Display Variables', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = displayMem).place(x = 183 , y = 367)
+Button(text='Display Memory', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = lambda : display(False, 'memory') ).place(x = 183 , y = 277)
+Button(text='Display Variables', fg = 'black' , bg='white', font=('Helvetica bold', 20), width = 27, height = 2  , command = lambda : display(False, 'vars') ).place(x = 183 , y = 367)
 win.mainloop()
