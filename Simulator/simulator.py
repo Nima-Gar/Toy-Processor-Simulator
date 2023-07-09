@@ -170,11 +170,11 @@ def onComboChange(event):
                         if (content[1] not in varAddresses.keys()) : memToDisplay[intCellAddress] = f'{content[0]} {int(content[1],16)}'
                 case 'Hex' :
                     if type(content) == int :
-                        memToDisplay[cell] = hex(content)[2:]
+                        memToDisplay[cell] = "{:04x}".format(content)
 
                 case 'Binary' :
                     if type(content) == int : 
-                        memToDisplay[cell] = bin(memToDisplay[cell])[2:]
+                        memToDisplay[cell] = "{:016b}".format(memToDisplay[cell])
                     else :
                         content = content.split()
                         if (content[1] not in varAddresses.keys()) : memToDisplay[cell] = f'{content[0]} { "{:014b}".format(int(content[1],16))[2:] }'
@@ -189,9 +189,9 @@ def onComboChange(event):
                 case 'Int':
                     varsToDiplay[var] = memory[addr]
                 case 'Hex':          
-                    varsToDiplay[var] = hex(memory[addr])[2:]
+                    varsToDiplay[var] = "{:04x}".format(memory[addr])
                 case 'Binary':
-                    varsToDiplay[var] = "{:018b}".format(memory[addr])[2:]
+                    varsToDiplay[var] = "{:016b}".format(memory[addr])
     
     display(True, listToDisplay)
 
@@ -204,7 +204,7 @@ def display(displayContetnt , liName):
     if not displayContetnt :
         listToDisplay = liName
         newWindow = Toplevel()    
-        newWindow.geometry("800x550+320+125")
+        newWindow.geometry("800x550+350+125")
         newWindow.title("Values")
         newWindow ['background'] = '#118da8'
 
@@ -229,7 +229,7 @@ def display(displayContetnt , liName):
         if listToDisplay == 'memory' :
             for addr , val in memToDisplay.items() :
                 if combo.get() == 'Binary' :
-                    txt_output.insert(END, f'            {"{:014b}".format(int(addr,16))[2:]}  :  {val}' + "\n")
+                    txt_output.insert(END, f'          {"{:014b}".format(int(addr,16))[2:]}  :  {val}' + "\n")
                 else :
                     txt_output.insert(END, f'\t            {addr}  :  {val}' + "\n")
         else :
@@ -243,7 +243,7 @@ def display(displayContetnt , liName):
     
 win = Tk()
 win.title('Simulator Menu')
-win.geometry('800x550+320+125')
+win.geometry('800x550+350+125')
 win ['background'] = '#20bbc9'
 
 Label(text = 'Amounts of Registers', bg='#20bbc9', font=('Helvetica bold', 24)).place(x = 403 , y = 58 , anchor = CENTER)
