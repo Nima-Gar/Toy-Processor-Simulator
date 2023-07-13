@@ -86,7 +86,7 @@ while pc <= lastInsAddress :
             c = 0
 
         case 'sbc':
-            A -= ins[1]
+            A = A - ins[1] - c
             z = int(A == 0)
             c = int(A < 0)
 
@@ -146,6 +146,8 @@ print(f'memory: {memory}')
 print(f'instrcutions: {instrcutions}')
 print(f'labels: {labels}')
 print(f'varAddresses: {varAddresses}')
+
+
 
 
 def onComboChange(event):
