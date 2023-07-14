@@ -40,7 +40,7 @@ while True :
             instruction = instruction.split()
             if len(instruction) == 2 :
                 instruction[1] = instruction[1][2:] if(instruction[1].find('0x') != -1)  else instruction[1]
-                instruction = f'{instruction[0]} {labels[instruction[1]]}' if(instruction[1] in labels.keys())   else f'{instruction[0]} {instruction[1]}'
+                instruction = f'{instruction[0]} {instruction[1]}'
             else :
                 instruction = instruction[0]
 
@@ -50,6 +50,14 @@ while True :
             lineAddress += 1
 file.close()
 
+
+# relacing labels with their corresponding addresses
+for addr, instruction in instrcutions.items():
+    instruction = instruction.split()
+    if len(instruction) == 2:
+        instruction = f'{instruction[0]} {labels[instruction[1]]}' if(instruction[1] in labels.keys())  else f'{instruction[0]} {instruction[1]}'
+        instrcutions[addr] = instruction
+        memory[addr] = instruction
 
 pc = 1
 lastInsAddress = int(list(instrcutions)[-1] , 16)
@@ -65,10 +73,17 @@ while pc <= lastInsAddress :
 
     elif len(ins) == 2 :
         # ins[1] is a variable (that we get its value from memory)
-        # or the address of a value in memory
-        # otherwise it's the addrees of an instruction existing in memory (that we want to put it in pc)
-        ins[1] = memory[varAddresses[ins[1]]] if(ins[1] in varAddresses.keys()) else memory[ins[1]] if(type(memory[ins[1]]) in (int , float)) else ins[1]
-    
+        # or a label without instruction(Exit Label) : ins[1] = ins[1]
+        # else it's the address of a value in memory
+        # otherwise it's the addrees of an instruction existing in memory (that we want to put it in pc) : we don't change ins[1]
+
+        if ins[1] in varAddresses.keys() :
+            ins[1] = memory[varAddresses[ins[1]]] 
+        elif ins[1] not in memory.keys() :
+            ins[1] = ins[1]
+        elif type(memory[ins[1]]) in (int , float) :
+            ins[1] = memory[ins[1]]
+
     match ins[0].lower() :
         case 'jmp':
             pc = int(ins[1],16)
@@ -138,9 +153,7 @@ while pc <= lastInsAddress :
         case 'sta':
             memory[dest] = A
 
-
     if pc == lastPC : pc += 1
-
 
 print(f'memory: {memory}')
 print(f'instrcutions: {instrcutions}')
