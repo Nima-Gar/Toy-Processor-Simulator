@@ -8,11 +8,11 @@ LDA Z
 STA 0x100
 
 loop: LDA 0x100
-ADC B
-STA 0x100
-LDA C
-SBC One
-STA C
-BNE loop
+      ADC B
+      STA 0x100
+      LDA C
+      SBC One
+      STA C
+      BNE loop
 
 LDA 0x100

@@ -1,0 +1,36 @@
+.org 60
+.data A 1
+.data B 1
+.data S 1
+.data N 10
+.data One 1
+
+LDA N
+SBC One
+BNE Continue
+LDA A
+JMP Exit
+
+Continue:
+SBC One
+BNE loop
+LDA B
+JMP Exit
+
+loop: STA N
+
+      LDA B
+      STA A
+      LDA S
+      STA B
+      LDA A
+      ADC B
+      STA S
+
+      LDA N
+      SBC One
+      BNE loop
+
+STA N
+LDA S
+Exit: 
