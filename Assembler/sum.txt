@@ -1,10 +1,13 @@
 .org 32
 .data A 5
 .data B 11
-.data C 0
+.data C
 .data D 34
 .data E 56
+
 LDA A
+STA C
+
 ADC B
 ADC C
 ADC D

@@ -25,7 +25,7 @@ while True :
         line = line.split()
         varAddress = "{:03x}".format(origin)
         varAddresses[line[1]] = varAddress
-        memory[varAddress] = int(line[2] , 10) if (len(line) == 3)  else 0
+        memory[varAddress] = int(line[2] , 10) if (len(line) == 3)   else None
         origin += 1
 
     else:

@@ -4,7 +4,10 @@
 .data C
 .data D 34
 .data E 56
-L: LDA A
+
+LDA A
+STA C
+
 ADC B
 ADC C
 ADC D
