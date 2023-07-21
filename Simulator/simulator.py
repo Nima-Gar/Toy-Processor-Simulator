@@ -1,6 +1,7 @@
 import sys
 from tkinter import ttk
 from tkinter import *
+from collections import OrderedDict 
 
 memory = {}
 instrcutions, labels, varAddresses = {}, {}, {}
@@ -154,6 +155,8 @@ while pc <= lastInsAddress :
             memory[dest] = A
 
     if pc == lastPC : pc += 1
+
+memory = dict( OrderedDict(sorted(memory.items())) )
 
 print(f'memory: {memory}')
 print(f'instrcutions: {instrcutions}')
