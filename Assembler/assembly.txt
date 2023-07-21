@@ -3,5 +3,5 @@ add: adc 0x010
 .data A 5
 .data B
 LDA B
-jmp: jmp add
-ror
+jmp: JMP add
+ROR
