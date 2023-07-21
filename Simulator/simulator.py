@@ -158,8 +158,8 @@ while pc <= lastInsAddress :
 
 memory = dict( OrderedDict(sorted(memory.items())) )
 
-print(f'memory: {memory}')
-print(f'instrcutions: {instrcutions}')
+print(f'memory: {memory}\n')
+print(f'instrcutions: {instrcutions}\n')
 print(f'labels: {labels}')
 print(f'varAddresses: {varAddresses}')
 
